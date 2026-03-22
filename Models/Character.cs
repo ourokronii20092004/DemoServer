@@ -7,13 +7,17 @@ public partial class Character
 {
     public Guid CharacterId { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public string CharacterName { get; set; } = null!;
+    public string Username { get; set; } = null!;
 
-    public double CharacterHealth { get; set; }
+    public int? TotalPlaytime { get; set; }
 
-    public double CharacterAttack { get; set; }
+    public DateTime? LastLogin { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual ICollection<CharacterSession> CharacterSessions { get; set; } = new List<CharacterSession>();
+
+    public virtual User? User { get; set; }
 }

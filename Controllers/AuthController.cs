@@ -1,72 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DemoArchitechture.Data;
 using DemoArchitechture.Models;
+using DemoArchitechture.DTOs;
 
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+namespace DemoArchitechture.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public AuthController(AppDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
-        _context = context;
-    }   
+        private readonly AppDbContext _context;
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    {
-        
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.UserEmail == request.Email && u.UserPasswordHash == request.Password);
-
-        if (user == null) return Unauthorized("Sai tài khoản hoặc mật khẩu");
-
-        
-        return Ok(new { userId = user.UserId, fullName = user.UserFullname });
-    }
-
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        
-        if (await _context.Users.AnyAsync(u => u.UserEmail == request.Email))
+        public AuthController(AppDbContext context)
         {
-            return BadRequest("Email này đã được sử dụng.");
+            _context = context;
         }
 
-        
-        var newUser = new User
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            UserId = Guid.NewGuid(),
-            UserFullname = request.FullName,
-            UserEmail = request.Email,
-            UserPasswordHash = request.Password, 
-            IsBanned = false,
-            UserCreatedAt = DateTime.UtcNow,
-            UserUpdatedAt = DateTime.UtcNow
-        };
+            // Tìm user bằng email
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-        
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
+            // Kiểm tra tồn tại và so sánh mật đã hash
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                return Unauthorized("Incorrect account or password.");
+            }
 
-        return Ok(new { message = "Đăng ký thành công!", userId = newUser.UserId });
+            // Kiểm tra trạng thái ban tài khoản
+            if (user.IsBanned == true)
+            {
+                return Forbid("Your account has been banned.");
+            }
+
+            // Update thời gian cuối cùng login
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                userId = user.UserId,
+                fullName = user.Fullname,
+                role = user.Role
+            });
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
+        {
+            // Kiểm tra trùng email
+            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+            {
+                return BadRequest("This email address has already been used.");
+            }
+
+            // Hash password trước khi lưu
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            var newUser = new User
+            {
+                // UserId sẽ tự động generate UUID nhờ DB default gen_random_uuid()
+                Fullname = request.FullName,
+                Email = request.Email,
+                PasswordHash = hashedPassword,
+                Role = "player",
+                IsBanned = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Registration successful!", userId = newUser.UserId });
+        }
     }
-
-    
-    public class RegisterRequest
-    {
-        public string FullName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-}
-
-
-public class LoginRequest
-{
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }

@@ -1,4 +1,3 @@
-using DemoArchitechture.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
