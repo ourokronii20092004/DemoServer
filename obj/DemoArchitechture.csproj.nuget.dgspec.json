@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DemoArchitechture\\DemoArchitechture.csproj": {}
+    "D:\\Project\\Unity\\Server\\DemoArchitechture.csproj": {}
   },
   "projects": {
-    "D:\\DemoArchitechture\\DemoArchitechture.csproj": {
+    "D:\\Project\\Unity\\Server\\DemoArchitechture.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DemoArchitechture\\DemoArchitechture.csproj",
+        "projectUniqueName": "D:\\Project\\Unity\\Server\\DemoArchitechture.csproj",
         "projectName": "DemoArchitechture",
-        "projectPath": "D:\\DemoArchitechture\\DemoArchitechture.csproj",
-        "packagesPath": "C:\\Users\\phanp\\.nuget\\packages\\",
-        "outputPath": "D:\\DemoArchitechture\\obj\\",
+        "projectPath": "D:\\Project\\Unity\\Server\\DemoArchitechture.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Unity\\Server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\phanp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -51,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.0, )"
@@ -99,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

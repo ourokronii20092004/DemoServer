@@ -7,17 +7,19 @@ public partial class User
 {
     public Guid UserId { get; set; }
 
-    public string UserFullname { get; set; } = null!;
+    public string Fullname { get; set; } = null!;
 
-    public string UserEmail { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
 
-    public string UserPasswordHash { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
-    public DateTime? UserCreatedAt { get; set; }
-
-    public DateTime? UserUpdatedAt { get; set; }
+    public string? Role { get; set; }
 
     public bool? IsBanned { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual ICollection<Character> Characters { get; set; } = new List<Character>();
 }
